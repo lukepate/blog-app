@@ -1,0 +1,14 @@
+{
+  "name": "express-project",
+  "version": "1.0.0",
+  "description": "blog app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
