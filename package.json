@@ -1,18 +1,25 @@
 {
-  "name": "express-project",
+  "name": "nodekb",
   "version": "1.0.0",
-  "description": "blog app",
+  "description": "Simple knowledgebase app",
   "main": "app.js",
   "scripts": {
     "start": "node app"
   },
-  "author": "",
+  "author": "Brad Traversy",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
-    "express": "^4.15.4",
-    "mongoose": "^4.11.8",
+    "connect-flash": "^0.1.1",
+    "express": "^4.15.3",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.15.3",
+    "express-validator": "^3.2.0",
+    "mongoose": "^4.10.2",
     "mustache-express": "^1.2.5",
-    "pug": "^2.0.0-rc.3"
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-rc.1"
   }
 }

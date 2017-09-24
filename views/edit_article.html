@@ -1,0 +1,17 @@
+
+
+    <div class="jumbotron">
+
+
+        <form method="POST" action="/articles/edit/{{article.id}}">
+          <div id="form-group">
+            <label>Title:</label>
+            <input name="title" type="text" class="form-control"/>
+          </div>
+          <div id="form-group">
+            <label>Body:</label>
+            <textarea name="body" class="form-control"></textarea>
+          </div><br/>
+          <input type="submit" value="Submit" class="btn btn-primary"/>
+        </form>
+      </div>

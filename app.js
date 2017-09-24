@@ -1,108 +1,111 @@
 const express = require('express');
 const path = require('path');
-const mustacheExpress = require('mustache-express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
+const config = require('./config/database');
+const mustacheExpress = require('mustache-express');
 
-// Init app
+mongoose.connect(config.database);
+let db = mongoose.connection;
+
+// Check connection
+db.once('open', function(){
+  console.log('Connected to MongoDB');
+});
+
+// Check for DB errors
+db.on('error', function(err){
+  console.log(err);
+});
+
+// Init App
 const app = express();
 
-// Bring in models
-const Article = require('./models/article');
+// Bring in Models
+let Article = require('./models/article');
 
 // Load View Engine
+app.set('views', path.join(__dirname, 'views'));
 app.engine('html', mustacheExpress());
 app.set("view engine", "mustache");
-app.set("views", __dirname + "/views");
 
+// Body Parser Middleware
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-
 // parse application/json
 app.use(bodyParser.json());
 
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Mongo db
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/nodekb');
-let db = mongoose.connection;
+// Express Session Middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}));
 
-// check connection
-db.once('open', function(){
-  console.log('Connected to MongoDB');
-})
-
-// check for db errors
-db.on('error', function(){
-  console.log(err);
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
 });
 
-// home route
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+});
+
+// Home Route
 app.get('/', function(req, res){
   Article.find({}, function(err, articles){
     if(err){
       console.log(err);
     } else {
       res.render('index.html', {
-        title: 'Articles',
+        title:'Articles',
         articles: articles
       });
     }
   });
 });
 
-// Add route
-app.get('/articles/add', function(req, res){
-  res.render('add.html', {
-
-  });
-})
-
-// Add submit POST route
-app.post('/articles/add', function(req, res){
-  let article = new Article();
-  article.title = req.body.title;
-  article.body = req.body.body;
-  article.author = req.body.author;
-
-  article.save(function(err){
-    if(err){
-      console.log(err);
-      return;
-    } else{
-      res.redirect('/');
-    }
-  });
-});
-
-//Get single article
-app.get('/article/:id', function(req, res){
-  let id = req.params.id;
-  Article.findById(id, function(err, article){
-    console.log(article)
-    res.render('article.html', {
-      article: article
-
-    })
-  });
-});
-
-// app.get("/creatures/:id", function(req, res){
-//   let id = req.params.id;
-//    db
-//     .one("SELECT * FROM creatures WHERE id = $1", [id])
-//     .then(function(data){
-//       let view_data = {
-//         name: data.planet,
-//         species: data.species
-//       };
-//       res.render("creatures/planets", view_data);
-//     })
-//   });
-
+// Route Files
+let articles = require('./routes/articles');
+let users = require('./routes/users');
+app.use('/articles', articles);
+app.use('/users', users);
 
 // Start Server
-app.listen('3000', function(){
-  console.log('server started on port 3000')
+app.listen(3000, function(){
+  console.log('Server started on port 3000...');
 });

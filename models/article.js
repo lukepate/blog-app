@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 // Article Schema
 let articleSchema = mongoose.Schema({
@@ -6,11 +6,15 @@ let articleSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  author: {
+  author:{
     type: String,
     required: true
   },
   body:{
+    type: String,
+    required: true
+  },
+  name:{
     type: String,
     required: true
   }

@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="ut f-8">
-    <title></title>
+    <title>Knowledgebase</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" class="navbar-toggle collapsed"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">KnowledgeBase</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/users/register">Register</a></li>
+            <li><a href="/users/login">Login</a></li>
+          </ul>
+        </div>
+      </div><br>
+      <bod>
+      <hr>
+      <footer>
+        <p>Copyright &copy; 2017</p>
+
+    </div>
+      </footer>
+    </nav>
+
     <p>{{article.title}}</p>
     hello
+      <p>{{article.body}}</p>
+        <p>{{article.author}}</p>
+        <p>{{article.name}}</p>
 
   </body>
 </html>
